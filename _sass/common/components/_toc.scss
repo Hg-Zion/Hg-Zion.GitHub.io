@@ -2,6 +2,7 @@ ul.toc {
   display: block;
   margin: 0;
   color: $text-color;
+  font-style: bold;
   list-style-type: none;
   & > li {
     margin: map-get($spacers, 1) / 2 0;
