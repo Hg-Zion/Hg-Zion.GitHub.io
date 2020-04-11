@@ -26,4 +26,18 @@
     border: 1px solid $red;
     border-radius: map-get($base, border-radius);
   }
+
+  p.conclude {
+    // padding: map-get($spacers, 2) map-get($spacers, 3);
+    // border: 2px solid #2d2d2d;
+    // border-radius: map-get($base, border-radius);
+
+
+    font-family: "Hiragino Sans GB","Microsoft YaHei",Trebuchet,"Trebuchet MS",Tahoma,"Lucida Grande","Lucida Sans Unicode",Verdana,sans-serif;
+    color: firebrick;
+    // background-color: #fff;
+    
+    font-weight: bold;
+    
+  }
 }
