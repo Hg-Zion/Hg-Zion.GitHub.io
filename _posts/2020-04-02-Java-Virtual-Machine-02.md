@@ -1,12 +1,10 @@
 ---
 title: 浅入理解JVM（二）—— JVM 垃圾回收机制
 tags: Java JVM
-show_author_profile: true
+show_author_profile: false
 ---
 
 
-
-# JVM 垃圾回收机制
 
 Java内存中的线程私有部分（程序计数器、虚拟机栈、本地方法栈）的内存分配与回收都是确定的，它们随方法退出或者线程结束而回收。因此，垃圾回收主要是围绕Java堆和方法区展开的，更确切地说，**垃圾回收问题就是对象内存的分配与回收问题**。
 {:.info}

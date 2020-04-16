@@ -1,7 +1,7 @@
 ---
 title: Java集合之ArrayList
 tags: Java 集合
-show_author_profile: true
+show_author_profile: false
 ---
 
 ArrayList和HashMap是集合学习的两座大山，由于其庞杂的体量，很容易让我们初学者在源码中迷失方向。个人认为，学习集合，应该从最基本的数据结构（包含集合的创建与扩容）、常用的增删查改方法、多线程环境的线程安全性三个方面来学习。虽然堪堪入门，但管中窥豹，可见一斑，以后慢慢深入也不迟。

@@ -1,12 +1,8 @@
 ---
 title: 浅入理解JVM（四）—— 线程安全与锁优化
 tags: Java JVM
-show_author_profile: true
+show_author_profile: false
 ---
-
-
-
-# 线程安全与锁优化
 
 ## 1.Java 语言中的线程安全
 

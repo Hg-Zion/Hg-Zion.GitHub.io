@@ -1,7 +1,7 @@
 ---
 title: 浅入理解JVM（一）
 tags: Java JVM
-show_author_profile: true
+show_author_profile: false
 ---
 
 <div>{%- include extensions/netease-cloud-music.html id='551722261' -%}</div>

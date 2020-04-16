@@ -1,7 +1,7 @@
 ---
 title: 来自4月12日
 tags: me
-show_author_profile: true
+show_author_profile: false
 ---
 
 
