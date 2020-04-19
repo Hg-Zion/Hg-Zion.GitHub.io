@@ -30,11 +30,11 @@ public static void deleteLast(Vector list) {
 }
 ```
 
-尽管上面的 `get()` 方法和 `remove()` 方法都是线程安全的，无论多少个线程去调用它们都不会破坏 Vector。但是从调用者的角度来看，如果当线程 A 调用 `get()` 方法时，线程 B 恰好执行了 `remove()` 方法，那么 getLast 将会抛出一个 `ArrayIndexOutOfBoundsException` 异常。
+尽管上面的 `get()` 方法和 `remove()` 方法都是线程安全的，无论多少个线程去调用它们都不会破坏 `Vector`。但是从调用者的角度来看，如果当线程 A 调用 `get()` 方法时，线程 B 恰好执行了 `remove()` 方法，那么 `getLast()` 将会抛出一个 `ArrayIndexOutOfBoundsException` 异常。
 
 ![vector-not-syn](/assets/images/concurrency/vector-not-syn.png)
 
-解决的方法通常是在客户端加锁，同样的例子，我们对传入参数 `list` 进行加锁，就可以保证 `Vector` 的大小在调用 `size` 和 `get` 之间不会发生变化。
+解决的方法通常是在客户端加锁，同样的例子，我们对传入参数 `list` 进行加锁，就可以保证 `Vector` 的大小在调用 `size()` 和 `get()` 之间不会发生变化。
 
 ```java
 public static Object getLast(Vector list) {
@@ -59,7 +59,7 @@ public static void deleteLast(Vector list) {
 由于在设计同步容器类迭代器时未考虑到并发修改问题，因此当它们发现容器在迭代过程中被修改时，就会抛出 `ConcurrentModificationException` 异常。
 {:.conclude}
 
-无论在直接迭代还是在 `for-each` 循环语法中，对容器类进行迭代的标准方式都是使用 Iterator。在迭代期间，如果有其他线程并发地修改容器，那么将无可避免地对容器加锁。当它们发现容器在迭代过程中被修改时，表现出的行为是及时失败 `fail-fast`，这意味着会抛出 `ConcurrentModificationException` 异常。这种“及时失败”的迭代器并不能捕获并发错误，而只能充当一个并发问题预警器。
+无论在直接迭代还是在 `for-each` 循环语法中，对容器类进行迭代的标准方式都是使用 **Iterator**。在迭代期间，如果有其他线程并发地修改容器，那么将无可避免地对容器加锁。当它们发现容器在迭代过程中被修改时，表现出的行为是及时失败 `fail-fast`，这意味着会抛出 `ConcurrentModificationException` 异常。这种“及时失败”的迭代器并不能捕获并发错误，而只能充当一个并发问题预警器。
 
 `fail-fast` 的实现方式通常是将计数器的变化同容器关联，如果在迭代期间计数器被修改，那么 `hasNext` 或 `next` 将会抛出 `ConcurrentModificationException` 异常。
 {:.info}
@@ -219,6 +219,7 @@ public class BoundHashSet<T> {
 ### 5.4 栅栏
 
 栅栏类似于闭锁，它也能阻塞一组线程直到某个事件发生，但是闭锁是一次性对象，而栅栏则可以多次使用。
+{:.conclude}
 
 `CyclicBarrier` 可以使一定数量的参与方反复在栅栏位置集合，它在并行算法中非常有用：这种算法通常将一个问题拆分成一系列独立的子问题。在线程到达栅栏位置时会调用 `await()` 方法阻塞，直到所有线程都到达栅栏位置。如果所有线程都到达了栅栏 ，那么栅栏将打开，此时所有线程都被释放，而栅栏将被重置以便下次使用。如果对 `await()` 的调用超时，后者 `await()` 阻塞的线程被中断，那么栅栏就被认为是打破了，所有阻塞的 `await()` 调用都将终止并抛出 `BrokenBarrirerException`。如果成功地通过栅栏，那么 `await()` 将为每个线程返回一个唯一的到达索引号，我们可以利用这些索引来“选举”产生一个领导线程，并在下一次迭代中由该领导线程执行一些特殊的工作。`CyclicBarrier` 还可以使你将一个栅栏操作传递给构造函数，这是一个 `Runnable`，当成功通过栅栏会（在一个子任务线程中）执行它，但在阻塞线程被释放之前是不能执行的。
 
