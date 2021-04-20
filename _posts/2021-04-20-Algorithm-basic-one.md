@@ -11,7 +11,6 @@ show_author_profile: false
 **1.1.1 AcWing 785. 快速排序**
 
 [题目链接](https://www.acwing.com/problem/content/787/)
-
 核心是**分治**，每次以 `j` 为分界点。难点在于初始化的“后撤步”，即 `i = l - 1` 和 `j = r + 1`，以及在交换元素时的前置判定容易遗漏。
 {:.conclude}
 
@@ -102,6 +101,108 @@ int main()
 
 
 ### 1.2 归并排序
+
+**1.2.1 AcWing 787. 归并排序**
+
+[题目链接](https://www.acwing.com/problem/content/789/)
+归并排序依然使用分治思想，先将数组分解，待子数组排序完毕后对其合并。核心是用**辅助数组**更新以及按 `mid` 分割。由数据范围 `1e5` ，知时间复杂度为 `O(NlogN)` 。
+{:.conclude}
+
+```c++
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+ 
+const int N = 100010;
+
+int n;
+int a[N], p[N];   // 辅助数组
+
+void merge_sort(int q[], int l, int r)
+{
+    if (l >= r) return;
+    
+    int mid = l + r >> 1;
+    merge_sort(q, l, mid);
+    merge_sort(q, mid + 1, r);
+    
+    int i = l, j = mid + 1, k = 0;      // k 新数组下标
+    while (i <= mid && j <= r)
+        if (q[i] <= q[j]) p[k++] = q[i++];
+        else p[k++] = q[j++];
+    while (i <= mid) p[k++] = q[i++];
+    while (j <= r) p[k++] = q[j++];
+    
+    for (i = l, k = 0; i <= r; i++, k++) q[i] = p[k];
+}
+
+int main()
+{
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    
+    merge_sort(a, 0, n - 1);
+    
+    for (int i = 0; i < n; i++) cout << a[i] << ' ';
+    
+    return 0;
+}
+```
+
+**1.2.2 AcWing 788. 逆序对的数量**
+
+[题目链接](https://www.acwing.com/problem/content/790/)
+只需要在归并子数组，记录右子数组中先归并元素即可。
+{:.conclude}
+
+```
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+const int N = 100010;
+
+int n;
+int a[N], p[N];
+
+LL merge_sort(int q[], int l, int r)
+{
+    if (l >= r) return 0;
+    
+    int mid = l + r >> 1;
+    LL ans = merge_sort(q, l, mid) + merge_sort(q, mid + 1, r);
+    
+    int i = l, j = mid + 1, k = 0;
+    while (i <= mid && j <= r)
+        if (q[i] <= q[j]) p[k++] = q[i++];
+        else
+        {
+            p[k++] = q[j++];
+            ans += mid - i + 1;     // 跨越长度
+        }
+    while (i <= mid) p[k++] = q[i++];
+    while (j <= r) p[k++] = q[j++];
+    
+    for (i = l, k = 0; i <= r; i++, k++) q[i] = p[k];
+    
+    return ans;
+}
+
+int main()
+{
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    
+    cout << merge_sort(a, 0, n - 1);
+    
+    return 0;
+}
+```
 
 
 
