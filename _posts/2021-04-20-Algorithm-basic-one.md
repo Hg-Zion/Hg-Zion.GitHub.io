@@ -11,6 +11,7 @@ show_author_profile: false
 **1.1.1 AcWing 785. 快速排序**
 
 [题目链接](https://www.acwing.com/problem/content/787/)
+
 核心是**分治**，每次以 `j` 为分界点。难点在于初始化的“后撤步”，即 `i = l - 1` 和 `j = r + 1`，以及在交换元素时的前置判定容易遗漏。
 {:.conclude}
 
