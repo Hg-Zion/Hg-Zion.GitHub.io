@@ -157,7 +157,7 @@ int main()
 只需要在归并子数组，记录右子数组中先归并元素即可。
 {:.conclude}
 
-```
+```c++
 #include <iostream>
 #include <cstring>
 #include <algorithm>
