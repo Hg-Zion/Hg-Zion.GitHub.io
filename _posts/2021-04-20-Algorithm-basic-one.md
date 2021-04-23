@@ -465,18 +465,318 @@ int main()
 **1.4.4 AcWing 794. 高精度除法**
 
 [题目链接](https://www.acwing.com/problem/content/796/)
-`0` 。
+从最高位开始除。
 {:.conclude}
 
+```c++
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 1e9 + 10;
+
+vector<int> div(vector<int> A, int b, int& r)
+{
+    vector<int> C;
+    
+    for (int i = A.size() - 1; i >= 0; i--) 
+    {
+        r = r * 10 + A[i];
+        C.push_back(r / b);
+        r = r % b;
+    }
+    reverse(C.begin(), C.end());
+    while (C.size() > 1 && C.back() == 0) C.pop_back();
+    
+    return C;
+}
+
+int main()
+{
+    string a;
+    int b;
+    vector<int> A, C;
+    
+    cin >> a >> b;
+    for (int i = a.size() - 1; i >= 0; i--) A.push_back(a[i] - '0');
+    
+    int r = 0;
+    C = div(A, b, r);
+    for (int i = C.size() - 1; i >= 0; i--) cout << C[i];
+    cout << endl << r << endl;
+    
+    return 0;
+}
+```
+
+
+
 ### 1.5 前缀和
+
+前缀和常用于辅助很多算法的化简步骤。
+{:.success}
+
+**1.5.1 AcWing 795. 前缀和**
+
+[题目链接](https://www.acwing.com/problem/content/797/)
+前缀和基础题。
+{:.conclude}
+
+```c++
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 1e5 + 10;
+int d[N], n, m;
+
+int main()
+{
+    cin >> n >> m;
+    // d[0] = 0;
+    int ans = 0;
+    for (int i = 1; i <= n; i++) 
+    {
+        int num;
+        cin >> num;
+        d[i] = d[i - 1] + num;
+    }
+    
+    for (int i = 1; i <= m; i++)
+    {
+        int a, b;
+        cin >> a >> b;
+        cout << d[b] - d[a - 1] << endl;
+    }
+    
+    return 0;
+}
+```
+
+**1.5.2 AcWing 796. 子矩阵的和**
+
+[题目链接](https://www.acwing.com/problem/content/798/)
+前缀和基础题。
+{:.conclude}
+
+```c++
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 1010;
+
+int g[N][N], area[N][N];
+int n, m, q;
+
+int main()
+{
+    cin >> n >> m >> q;
+    for (int i = 1; i <= n; i++)
+    {
+        int d = 0;
+        for (int j = 1; j <= m; j++)
+        {
+            int a;
+            scanf("%d", &a);
+            d += a;
+            g[i][j] = g[i - 1][j] + d;
+        }
+    }
+    
+    for (int i = 1; i <= q; i++)
+    {
+        int x1, y1, x2, y2;
+        scanf("%d%d%d%d", &x1, &y1, &x2, &y2);
+        int s1 = g[x1 - 1][y1 - 1], s2 = g[x2][y1 - 1], s3 = g[x1 - 1][y2], s4 = g[x2][y2]; // 注意将点转换成格子
+        int s = s4 - s2 - s3 + s1;
+        cout << s << endl;
+    }
+    
+    return 0;
+    
+}
+```
 
 
 
 ### 1.6 差分
 
+**1.6.1 AcWing 797. 差分**
+
+[题目链接](https://www.acwing.com/problem/content/799/)
+核心思路是将序列区间分解为两个后缀之差。
+{:.conclude}
+
+```c++
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 100010;
+
+int n, m;
+int a[N], d[N];
+
+int main()
+{
+    cin >> n >> m;
+    for (int i = 1; i <= n; i++) cin >> a[i];
+    for (int i = 1; i <= m; i++)
+    {
+        int l, r, c;
+        cin >> l >> r >> c;
+        
+        d[l] += c;
+        d[r + 1] -= c;
+    }
+    
+    int ex = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        ex += d[i];
+        cout << a[i] + ex << ' ';
+    }
+    cout << endl;
+    
+    return 0;
+}
+```
+
+**1.6.2 AcWing 798. 差分矩阵**
+
+[题目链接](https://www.acwing.com/problem/content/800/)
+基础题。
+{:.conclude}
+
+```c++
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 1010;
+int g[N][N], d[N][N], n, m, q;
+
+int main()
+{
+    cin >> n >> m >> q;
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= m; j++)
+            scanf("%d", &g[i][j]);
+    
+    for (int i = 1; i <= q; i++)
+    {
+        int x1, y1, x2, y2, c;
+        scanf("%d%d%d%d%d", &x1, &y1, &x2, &y2, &c);
+        // 按右下角对齐分布 s = s1 + s4 - s2 - s3;
+        d[x1][y1] += c;
+        d[x2 + 1][y2 + 1] += c;
+        d[x1][y2 + 1] -= c;
+        d[x2 + 1][y1] -= c;
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        int dist = 0;
+        for (int j = 1; j <= m; j++)
+        {
+            dist += d[i][j];
+            d[i][j] = dist + d[i - 1][j];
+            g[i][j] += d[i][j];
+            printf("%d ", g[i][j]);
+        }
+        printf("\n");
+    }
+    
+    return 0;
+}
+```
+
 
 
 ### 1.7 双指针
+
+**1.7.1 AcWing 799. 最长连续不重复子序列**
+
+[题目链接](https://www.acwing.com/problem/content/801/)
+基础题。
+{:.conclude}
+
+```c++
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+const int N = 100010;
+
+int a[N], st[N];
+int n;
+
+int main()
+{
+    cin >> n;
+    for (int i = 1; i <= n; i++) cin >> a[i];
+    
+    int ans = 0;
+    for (int i = 1, j = 1; i <= n; i++)
+    {
+        st[a[i]]++;
+        while (st[a[i]] > 1) st[a[j++]]--;
+        ans = max(ans, i - j + 1);
+    }
+    
+    cout << ans << endl;
+    
+    return 0;
+}
+```
+
+**1.7.1 AcWing 800. 数组元素的目标和**
+
+[题目链接](https://www.acwing.com/problem/content/802/)
+基础题。
+{:.conclude}
+
+```c++
+#include <iostream>
+
+using namespace std;
+
+const int N = 1e5 + 10;
+
+int a[N], b[N];
+int n, m, x;
+
+int main()
+{
+    cin >> n >> m >> x;
+    for (int i = 0; i < n; i++) scanf("%d", &a[i]);
+    for (int i = 0; i < m; i++) scanf("%d", &b[i]);
+    
+    int l = 0, r = m - 1;
+    while (l < n)
+    {
+        while (r > 0 && a[l] + b[r] > x) r--;
+        if (a[l] + b[r] == x) break;
+        l++;
+    }
+    
+    cout << l << ' ' << r << endl;
+    
+    return 0;
+}
+```
 
 
 
@@ -499,8 +799,4 @@ int main()
 
 
 ### 2.2 归并排序的改进
-
-## 3 搜索和图论
-
-
 
